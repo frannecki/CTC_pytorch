@@ -92,7 +92,7 @@ class LanguageModel:
         return val
 
 if __name__ == "__main__":
-    lm = LanguageModel('./data_prepare/bigram.arpa')
+    lm = LanguageModel('../../CTC_pytorch_data/data_prepare/bigram.arpa')
     #print(lm.bigram['你 好'])
     print(lm.get_bi_prob('', 'sil'))
     #print(lm.score_bg("中国 呼吸"))

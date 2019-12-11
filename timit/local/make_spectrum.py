@@ -1,5 +1,4 @@
 #encoding=utf-8
-
 #The code make the Full-mell Spectrogram feature and save it as ark and scp
 #Author:  Richardfan
 #Date:    2018.4.24
@@ -15,19 +14,22 @@ class KaldiWriteOut(object):
     def __init__(self, ark_path, scp_path):
         self.ark_path = ark_path
         self.scp_path = scp_path
-	self.ark_file_write = open(ark_path, 'wb')
+        self.ark_file_write = open(ark_path, 'wb')
         self.scp_file_write = open(scp_path, 'w')
         self.pos = 0
 
     def write_kaldi_mat(self, utt_id, utt_mat):
         utt_mat = np.asarray(utt_mat, dtype=np.float32)
         rows, cols = utt_mat.shape
-        self.ark_file_write.write(struct.pack('<%ds'%(len(utt_id)), utt_id))
-        self.ark_file_write.write(struct.pack('<cxcccc', ' ', 'B', 'F', 'M', ' '))
+        self.ark_file_write.write(struct.pack('<ds', len(utt_id), bytes(utt_id, encoding='utf8')))
+        self.ark_file_write.write(struct.pack('<cxcccc', bytes(' ', encoding='utf8'), 
+          bytes('B', encoding='utf8'), bytes('F', encoding='utf8'), bytes('M', encoding='utf8'), 
+          bytes(' ', encoding='utf8')))
         self.ark_file_write.write(struct.pack('<bi', 4, rows))
         self.ark_file_write.write(struct.pack('<bi', 4, cols))
         self.ark_file_write.write(utt_mat)
-        self.pos += len(utt_id) + 1
+        #self.pos += len(utt_id) + 4 + 1
+        self.pos += 5 + 4 + 1
         self.scp_file_write.write(utt_id + ' ' + self.ark_path + ':' + str(self.pos) + '\n')
         self.pos += 3 * 5 + (rows * cols * 4)
 
@@ -45,10 +47,10 @@ def load_audio(path):
     sound, _ = torchaudio.load(path)
     sound = sound.numpy()
     if len(sound.shape) > 1:
-        if sound.shape[1] == 1:
+        if sound.shape[0] == 1:
             sound = sound.squeeze()
         else:
-            sound - sound.mean(axis=1)
+            sound = sound.mean(axis=0)
     return sound
 
 def parse_audio(path, audio_conf, windows, normalize=True):

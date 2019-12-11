@@ -4,7 +4,7 @@
 import time
 import torch
 import argparse
-import ConfigParser
+import configparser
 import torch.nn as nn
 from torch.autograd import Variable
 
@@ -23,9 +23,9 @@ def test():
     args = parser.parse_args()
     if args.model_path is not None:
         package = torch.load(args.model_path)
-        data_dir = '../data_prepare/data'
+        data_dir = '../../../CTC_pytorch_data/data_prepare/data'
     else:
-        cf = ConfigParser.ConfigParser()
+        cf = configparser.ConfigParser()
         cf.read(args.conf)
         model_path = cf.get('Model', 'model_file')
         data_dir = cf.get('Data', 'data_dir')

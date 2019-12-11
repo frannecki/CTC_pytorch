@@ -8,7 +8,7 @@ import time
 import torch
 import argparse
 import numpy as np
-import ConfigParser
+import configparser
 import torch.nn as nn
 from torch.autograd import Variable
 
@@ -176,7 +176,7 @@ def add_weights_noise(m):
 
 def main():
     args = parser.parse_args()
-    cf = ConfigParser.ConfigParser()
+    cf = configparser.ConfigParser()
     try:
         cf.read(args.conf)
     except:
@@ -187,7 +187,7 @@ def main():
         seed = long(seed)
     except:
         seed = torch.cuda.initial_seed()
-        cf.set('Training', 'seed', seed)
+        cf.set('Training', 'seed', str(seed))
         cf.write(open(args.conf, 'w'))
     
     USE_CUDA = cf.getboolean("Training", "use_cuda")
@@ -233,11 +233,11 @@ def main():
         cnn_param["layer"].append(layer_param)
 
     model = CTC_Model(rnn_param=rnn_param, add_cnn=add_cnn, cnn_param=cnn_param, num_class=num_class, drop_out=drop_out)
-    
+    '''
     for idx, m in enumerate(model.children()):
         print(idx, m)
         logger.info(str(idx) + "->" + str(m))
-    
+    '''
     dataset = cf.get('Data', 'dataset')
     data_dir = cf.get('Data', 'data_dir')
     feature_type = cf.get('Data', 'feature_type')

@@ -15,7 +15,7 @@ import visdom
 def test():
     model_path = '../log/exp_cnn_lstm_ctc_spectrum201/exp_cnn3*41_3*21_4lstm_ctc_Melspectrum_stride_1_2/exp2_82.1483/best_model_cv80.8660423723.pkl'
     package = torch.load(model_path)
-    data_dir = '../data_prepare/data'
+    data_dir = '/home/fran/Documents/CTC_pytorch_data/data_prepare/data'
     rnn_param = package["rnn_param"]
     add_cnn = package["add_cnn"]
     cnn_param = package["cnn_param"]

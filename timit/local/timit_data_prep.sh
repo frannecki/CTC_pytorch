@@ -10,7 +10,7 @@ if [ $# -ne 1 ]; then
 fi
 
 conf_dir=`pwd`/conf
-prepare_dir=`pwd`/data_prepare
+prepare_dir=`pwd`/../../CTC_pytorch_data/data_prepare
 
 . path.sh
 sph2pipe=$KALDI_ROOT/tools/sph2pipe_v2.5/sph2pipe
@@ -23,10 +23,10 @@ fi
 [ -f $conf_dir/dev_spk.list ] || error_exit "$PROG: dev-set speaker list not found.";
 
 #根据数据库train，test的名称修改，有时候下载下来train可能是大写或者是其他形式
-train_dir=train
-test_dir=test
+train_dir=TRAIN
+test_dir=TEST
 
-ls -d "$*"/$train_dir/dr*/* | sed -e "s:^.*/::" > $conf_dir/train_spk.list
+ls -d "$*"/$train_dir/DR*/* | sed -e "s:^.*/::" > $conf_dir/train_spk.list
 
 tmpdir=`pwd`/tmp
 mkdir -p $tmpdir $prepare_dir

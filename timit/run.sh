@@ -10,8 +10,8 @@
 . path.sh
 
 stage=1
-TIMIT_DIR='/home/fan/Audio_data/TIMIT'
-lm_path='./data_prepare/LM/bigram.arpa'
+TIMIT_DIR='/home/fran/Downloads/TIMIT'
+lm_path='/data_prepare/LM/bigram.arpa'
 CONF_FILE='./conf/ctc_model_setting.conf'
 LOG_DIR='./log/'
 MAP_FILE='./decode_map_48-39/map_dict.pkl'
