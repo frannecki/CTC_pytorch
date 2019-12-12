@@ -109,7 +109,7 @@ class Decoder(object):
     def _convert_to_string(self, seq, sizes):
         result = []
         for i in range(sizes):
-            result.append(self.int_to_char[seq[i]])
+            result.append(self.int_to_char[int(seq[i])])
         if self.space_idx == -1:
             return result
         else:

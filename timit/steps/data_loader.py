@@ -165,7 +165,7 @@ class SpeechCNNDataLoader(DataLoader):
         self.collate_fn = create_CNN_input
 
 if __name__ == '__main__':
-    dev_dataset = SpeechDataset('../../CTC_pytorch_data/data_prepare', data_set='train', feature_type="mfcc", out_type='phone', n_feats=201, mel=False)
+    dev_dataset = SpeechDataset('/home/fran/Documents/CTC_pytorch_data/data_prepare', data_set='train', feature_type="mfcc", out_type='phone', n_feats=201, mel=False)
     dev_dataloader = SpeechDataLoader(dev_dataset, batch_size=2, shuffle=True)
     
     import visdom

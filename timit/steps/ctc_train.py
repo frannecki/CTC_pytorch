@@ -79,7 +79,7 @@ def train(model, train_loader, loss_fn, optimizer, logger, add_cnn=True, print_e
         total_loss += loss.data[0]
         optimizer.zero_grad()
         loss.backward()
-        nn.utils.clip_grad_norm(model.parameters(), 400)
+        nn.utils.clip_grad_norm_(model.parameters(), 400)
         optimizer.step()
         i += 1
     average_loss = total_loss / i
@@ -253,12 +253,12 @@ def main():
     if add_cnn:
         train_loader = SpeechCNNDataLoader(train_dataset, batch_size=batch_size, shuffle=True,
                                             num_workers=4, pin_memory=False)
-        dev_loader = SpeechCNNDataLoader(dev_dataset, batch_size=batch_size, shuffle=False,
+        dev_loader = SpeechCNNDataLoader(dev_dataset, batch_size=8, shuffle=False,
                                             num_workers=4, pin_memory=False)
     else:
         train_loader = SpeechDataLoader(train_dataset, batch_size=batch_size, shuffle=True,
                                             num_workers=4, pin_memory=False)
-        dev_loader = SpeechDataLoader(dev_dataset, batch_size=batch_size, shuffle=False,
+        dev_loader = SpeechDataLoader(dev_dataset, batch_size=8, shuffle=False,
                                             num_workers=4, pin_memory=False)
     #decoder for dev set
     decoder = GreedyDecoder(dev_dataset.int2class, space_idx=-1, blank_index=0)
@@ -381,11 +381,14 @@ def main():
             else:
                 viz.line(X = np.array(x_axis), Y = np.array(y_axis[x]), win = viz_window[x], update = 'replace',)
 
+        model_path = os.path.join(args.log_dir, 'model'+'_dev_'+str(int(acc))+'.pkl')
+        torch.save(CTC_Model.save_package(model, optimizer=optimizer, epoch=params, loss_results=loss_results, dev_loss_results=dev_loss_results, dev_cer_results=dev_cer_results), model_path)
+
     print("End training, best dev loss is: %.4f, acc is: %.4f" % (loss_best, acc_best))
     logger.info("End training, best dev loss acc is: %.4f, acc is: %.4f" % (loss_best, acc_best)) 
     model.load_state_dict(best_model_state)
     optimizer.load_state_dict(best_op_state)
-    best_path = os.path.join(args.log_dir, 'best_model'+'_dev'+str(acc_best)+'.pkl')
+    best_path = os.path.join(args.log_dir, 'best_model'+'_dev_'+str(int(acc_best))+'.pkl')
     cf.set('Model', 'model_file', best_path)
     cf.write(open(args.conf, 'w'))
     params['epoch']=count
